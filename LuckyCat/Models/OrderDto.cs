@@ -4,6 +4,6 @@ namespace LuckyCat.Models;
 
 public class OrderDto
 {
-    public List<Product> Products { get; set; }
+    public Dictionary<Product, int> OrderedProducts { get; set; }
     public decimal ExtraAmount { get; set; }
 }

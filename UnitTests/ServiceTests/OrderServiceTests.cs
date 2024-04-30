@@ -31,7 +31,12 @@ public class OrderServiceTests
 
         WhenOrder(new OrderDto
         {
-            Products = [Product.SauceDuckRice],
+            OrderedProducts = new Dictionary<Product, int>
+            {
+                {
+                    Product.SauceDuckRice, 1
+                }
+            },
             ExtraAmount = 20
         });
 
@@ -48,12 +53,18 @@ public class OrderServiceTests
 
         WhenOrder(new OrderDto
         {
-            Products = [Product.SauceDuckRice],
+            OrderedProducts = new Dictionary<Product, int>
+            {
+                {
+                    Product.SauceDuckRice, 2
+                }
+            },
             ExtraAmount = 20
         });
 
-        _orderRepository.Received().SaveOrder(Arg.Is<OrderDomain>(o => o.TotalAmount == 40));
+        _orderRepository.Received().SaveOrder(Arg.Is<OrderDomain>(o => o.TotalAmount == 60));
     }
+
 
     private void WhenOrder(OrderDto orderDto)
     {

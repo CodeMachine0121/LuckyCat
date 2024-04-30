@@ -15,14 +15,15 @@ public class OrderService: IOrderService
 
     public void StoreOrder(OrderDto dto)
     {
-        var prizeBy = _orderRepository.GetPrizeBy(dto.Products);
+        var prizeBy = _orderRepository.GetPrizeBy(dto.OrderedProducts.Keys.ToList());
 
         var orderDomain = new OrderDomain()
         {
             TotalAmount = dto.ExtraAmount
         };
         
-        dto.Products.ForEach(x=> orderDomain.TotalAmount += prizeBy[x]);
+        dto.OrderedProducts.Keys.ToList().ForEach(x=> 
+            orderDomain.TotalAmount += prizeBy[x] * dto.OrderedProducts[x]);
 
         _orderRepository.SaveOrder(orderDomain);
     }

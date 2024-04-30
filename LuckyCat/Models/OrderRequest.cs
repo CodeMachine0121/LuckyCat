@@ -4,14 +4,20 @@ namespace LuckyCat.Models;
 
 public class OrderRequest
 {
-    public List<int> ProductIds { get; set; }
+    public Dictionary<int, int> OrderedProductIds { get; set; }
     public decimal ExtraAmount { get; set; }
 
     public OrderDto ToDto()
     {
+        
         return new OrderDto
         {
-            Products = ProductIds.Select(x=> (Product)Enum.Parse(typeof(Product), x.ToString())).ToList(),
+            
+            OrderedProducts = OrderedProductIds.Select(x=> 
+                new Dictionary<Product, int>
+                {
+                    {Enum.Parse<Product>(x.Key.ToString()), x.Value}
+                }).First(),
             ExtraAmount = ExtraAmount
         };
     }
