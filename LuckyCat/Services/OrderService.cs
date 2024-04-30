@@ -4,18 +4,12 @@ using LuckyCat.Repositories;
 
 namespace LuckyCat.Services;
 
-public class OrderService: IOrderService
+public class OrderService(IOrderRepository orderRepository) : IOrderService
 {
-    private readonly IOrderRepository _orderRepository;
-
-    public OrderService(IOrderRepository orderRepository)
-    {
-        _orderRepository = orderRepository;
-    }
 
     public void StoreOrder(OrderDto dto)
     {
-        var prizeBy = _orderRepository.GetPrizeBy(dto.OrderedProducts.Keys.ToList());
+        var prizeBy = orderRepository.GetPrizeBy(dto.OrderedProducts.Keys.ToList());
 
         var orderDomain = new OrderDomain()
         {
@@ -25,6 +19,6 @@ public class OrderService: IOrderService
         dto.OrderedProducts.Keys.ToList().ForEach(x=> 
             orderDomain.TotalAmount += prizeBy[x] * dto.OrderedProducts[x]);
 
-        _orderRepository.SaveOrder(orderDomain);
+        orderRepository.SaveOrder(orderDomain);
     }
 }

@@ -5,19 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace LuckyCat;
 
 [Route("/api/order")]
-public class OrderController : ControllerBase
+public class OrderController(IOrderService orderService) : ControllerBase
 {
-    private IOrderService _orderService;
-
-    public OrderController(IOrderService orderService)
-    {
-        _orderService = orderService;
-    }
 
     [HttpPost]
     public ApiResponse CreateOrder(OrderRequest request)
     {
-        _orderService.StoreOrder(request.ToDto());
+        orderService.StoreOrder(request.ToDto());
         return new ApiResponse
         {
             IsSuccess = true,
