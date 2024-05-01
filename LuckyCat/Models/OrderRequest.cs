@@ -9,14 +9,12 @@ public class OrderRequest
 
     public OrderDto ToDto()
     {
-        
         return new OrderDto
         {
-            
-            OrderedProducts = OrderedProductIds.Select(x=> 
+            OrderedProducts = OrderedProductIds.Select(x =>
                 new Dictionary<Product, int>
                 {
-                    {Enum.Parse<Product>(x.Key.ToString()), x.Value}
+                    { Enum.Parse<Product>(x.Key.ToString()), x.Value }
                 }).First(),
             ExtraAmount = ExtraAmount
         };
