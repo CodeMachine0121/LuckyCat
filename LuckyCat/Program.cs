@@ -3,6 +3,7 @@ using LuckyCat.Interface;
 using LuckyCat.Repositories;
 using LuckyCat.Services;
 using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,8 +20,18 @@ builder.Services.AddTransient<IOrderRepository, OrderRepository>();
 
 builder.Services.AddDbContext<LuckyDbContext>(options =>
 {
-    var mySqlConnectionStr = builder.Configuration.GetConnectionString("DefaultConnection");
-    options.UseMySql(mySqlConnectionStr, ServerVersion.AutoDetect(mySqlConnectionStr));
+    var connectionString = new MySqlConnectionStringBuilder()
+    {
+        SslMode = MySqlSslMode.None,
+        Pooling = true,
+        Server = Environment.GetEnvironmentVariable("INSTANCE_UNIX_SOCKET"),
+        UserID = Environment.GetEnvironmentVariable("DB_USER"),
+        Password = Environment.GetEnvironmentVariable("DB_PASS"),
+        Database = Environment.GetEnvironmentVariable("DB_NAME"),
+        ConnectionProtocol = MySqlConnectionProtocol.UnixSocket
+    }.ToString();
+
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 }, ServiceLifetime.Transient);
 
 
