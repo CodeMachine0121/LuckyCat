@@ -9,9 +9,9 @@ public class OrderController(IOrderService orderService) : ControllerBase
 {
 
     [HttpPost]
-    public ApiResponse CreateOrder(OrderRequest request)
+    public async Task<ApiResponse> CreateOrder([FromBody] OrderRequest request)
     {
-        orderService.StoreOrder(request.ToDto());
+        await orderService.StoreOrder(request.ToDto());
         return new ApiResponse
         {
             IsSuccess = true,

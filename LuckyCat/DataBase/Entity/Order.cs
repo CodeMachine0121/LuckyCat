@@ -10,5 +10,5 @@ public class Order: BaseEntityIntId
     public decimal TotalAmount { get; set; }
     
     [Required]
-    public Dictionary<string, int> OrderedProduct { get; set; }
+    public string OrderedProduct { get; set; }
 }

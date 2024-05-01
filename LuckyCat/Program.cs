@@ -3,7 +3,6 @@ using LuckyCat.Interface;
 using LuckyCat.Repositories;
 using LuckyCat.Services;
 using Microsoft.EntityFrameworkCore;
-using MySqlConnector;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,22 +19,16 @@ builder.Services.AddTransient<IOrderRepository, OrderRepository>();
 
 builder.Services.AddDbContext<LuckyDbContext>(options =>
 {
-    var connectionString = new MySqlConnectionStringBuilder()
-    {
-        SslMode = MySqlSslMode.None,
-        Pooling = true,
-        Server = Environment.GetEnvironmentVariable("INSTANCE_UNIX_SOCKET"),
-        UserID = Environment.GetEnvironmentVariable("DB_USER"),
-        Password = Environment.GetEnvironmentVariable("DB_PASS"),
-        Database = Environment.GetEnvironmentVariable("DB_NAME"),
-        ConnectionProtocol = MySqlConnectionProtocol.UnixSocket
-    }.ToString();
-
+    var connectionString = builder.Configuration.GetConnectionString("MySql");
+    connectionString = connectionString!.Replace("${DB_NAME}", Environment.GetEnvironmentVariables()["DB_NAME"]!.ToString());
+    connectionString = connectionString!.Replace("${DB_PASS}", Environment.GetEnvironmentVariables()["DB_PASS"]!.ToString());
+    connectionString = connectionString!.Replace("${DB_USER}", Environment.GetEnvironmentVariables()["DB_USER"]!.ToString());
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 }, ServiceLifetime.Transient);
 
 
 var app = builder.Build();
+app.MapGet("hello", () => "Hello World!");
 app.MapControllers();
 
 // Configure the HTTP request pipeline.

@@ -5,6 +5,6 @@ namespace LuckyCat.Repositories;
 
 public interface IOrderRepository
 {
-    void SaveOrder(OrderDomain domain);
+    Task SaveOrder(OrderDomain domain);
     Dictionary<Product, decimal> GetPrizeBy(List<Product> any);
 }

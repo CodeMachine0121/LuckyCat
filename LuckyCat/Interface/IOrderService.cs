@@ -4,5 +4,5 @@ namespace LuckyCat.Interface;
 
 public interface IOrderService
 {
-    void StoreOrder(OrderDto dto);
+    Task StoreOrder(OrderDto dto);
 }

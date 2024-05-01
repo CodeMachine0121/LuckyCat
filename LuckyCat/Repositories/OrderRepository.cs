@@ -1,3 +1,4 @@
+using System.Text.Json;
 using LuckyCat.DataBase;
 using LuckyCat.DataBase.Entity;
 using LuckyCat.Enums;
@@ -10,7 +11,7 @@ public class OrderRepository(LuckyDbContext context) : BaseRepository(context), 
 {
     private readonly DbSet<Order> _repo = context.Order;
 
-    public void SaveOrder(OrderDomain domain)
+    public async Task SaveOrder(OrderDomain domain)
     {
         var orderedProducts = new Dictionary<string, int>();
         domain.OrderedProducts.Keys.ToList().ForEach(x=> orderedProducts.Add(x.ToString(), domain.OrderedProducts[x]));
@@ -20,8 +21,10 @@ public class OrderRepository(LuckyDbContext context) : BaseRepository(context), 
             CreatedOn = DateTime.Now,
             CreatedBy = "System",
             TotalAmount = domain.TotalAmount,
-            OrderedProduct = orderedProducts
+            OrderedProduct = JsonSerializer.Serialize(orderedProducts)
         });
+
+        await SaveChangesAsync();
     }
 
     public Dictionary<Product, decimal> GetPrizeBy(List<Product> any)

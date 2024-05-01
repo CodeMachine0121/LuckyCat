@@ -11,8 +11,8 @@ public class BaseRepository
         _context = context;
     }
     
-    protected Task SaveChangesAsync()
+    protected async Task SaveChangesAsync()
     {
-        return _context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
     }
 }
