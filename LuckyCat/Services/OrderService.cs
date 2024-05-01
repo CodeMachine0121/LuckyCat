@@ -13,7 +13,8 @@ public class OrderService(IOrderRepository orderRepository) : IOrderService
 
         var orderDomain = new OrderDomain()
         {
-            TotalAmount = dto.ExtraAmount
+            TotalAmount = dto.ExtraAmount,
+            OrderedProducts = dto.OrderedProducts
         };
         
         dto.OrderedProducts.Keys.ToList().ForEach(x=> 
