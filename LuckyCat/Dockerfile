@@ -1,22 +1,21 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER $APP_UID
+﻿FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
-EXPOSE 5037
+COPY ./ ./
+RUN dotnet restore "LuckyCat/LuckyCat.csproj" -s https://api.nuget.org/v3/ -s https://www.nuget.org/api/v2/
+RUN dotnet publish "LuckyCat/LuckyCat.csproj" -c Release -o published
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
-COPY ["LuckyCat/LuckyCat.csproj", "LuckyCat/"]
-RUN dotnet restore "LuckyCat/LuckyCat.csproj"
-COPY . .
-WORKDIR "/src/LuckyCat"
-RUN dotnet build "LuckyCat.csproj" -c $BUILD_CONFIGURATION -o /app/build
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine
 
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "LuckyCat.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+# Change timezone to America/Anguilla (GMT-4)
+ENV TZ America/Anguilla
+RUN apk add tzdata                                  && \
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime  && \
+    echo $TZ > /etc/timezone   
 
-FROM base AS final
+RUN apk add --no-cache icu-libs
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app/published/ ./
+
 ENTRYPOINT ["dotnet", "LuckyCat.dll"]
