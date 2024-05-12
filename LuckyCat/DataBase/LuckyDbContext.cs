@@ -10,12 +10,13 @@ public class LuckyDbContext : DbContext
     }
 
     public DbSet<Order> Order { get; set; }
+    public DbSet<Price> Price { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         
-        modelBuilder.Entity<Order>()
-            .HasKey(x=> x.Id);
+        modelBuilder.Entity<Order>().HasKey(x=> x.Id);
+        modelBuilder.Entity<Price>().HasKey(x=> x.Id);
     }
 
 }
