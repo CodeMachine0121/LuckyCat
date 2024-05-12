@@ -4,12 +4,13 @@ using LuckyCat.Repositories;
 
 namespace LuckyCat.Services;
 
-public class OrderService(IOrderRepository orderRepository) : IOrderService
+public class OrderService(IOrderRepository orderRepository, IPriceRepository prizeRepository) : IOrderService
 {
 
     public async Task StoreOrder(OrderDto dto)
     {
-        var prizeBy = orderRepository.GetPrizeBy(dto.OrderedProducts.Keys.ToList());
+        var orderedProductItems = dto.OrderedProducts.Keys.ToList();
+        var prizeBy = prizeRepository.GetPrizeBy(orderedProductItems);
 
         var orderDomain = new OrderDomain()
         {
@@ -17,8 +18,7 @@ public class OrderService(IOrderRepository orderRepository) : IOrderService
             OrderedProducts = dto.OrderedProducts
         };
         
-        dto.OrderedProducts.Keys.ToList().ForEach(x=> 
-            orderDomain.TotalAmount += prizeBy[x] * dto.OrderedProducts[x]);
+        orderedProductItems.ForEach(x=> orderDomain.TotalAmount += prizeBy[x] * dto.OrderedProducts[x]);
 
         await orderRepository.SaveOrder(orderDomain);
     }

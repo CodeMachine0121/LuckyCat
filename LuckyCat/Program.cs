@@ -15,6 +15,7 @@ builder.Services.AddSwaggerGen();
 // DI
 builder.Services.AddTransient<IOrderService, OrderService>();
 builder.Services.AddTransient<IOrderRepository, OrderRepository>();
+builder.Services.AddTransient<IPriceRepository, PriceRepository>();
 
 
 builder.Services.AddDbContext<LuckyDbContext>(options =>

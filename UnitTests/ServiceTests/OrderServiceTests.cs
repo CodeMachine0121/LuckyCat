@@ -1,4 +1,5 @@
 using LuckyCat.Enums;
+using LuckyCat.Interface;
 using LuckyCat.Models;
 using LuckyCat.Repositories;
 using LuckyCat.Services;
@@ -12,12 +13,15 @@ public class OrderServiceTests
 {
     private IOrderRepository _orderRepository;
     private OrderService _orderService;
+    private IPriceRepository _prizeRepository;
 
     [SetUp]
     public void SetUp()
     {
         _orderRepository = Substitute.For<IOrderRepository>();
-        _orderService = new OrderService(_orderRepository);
+        _prizeRepository = Substitute.For<IPriceRepository>();
+
+        _orderService = new OrderService(_orderRepository, _prizeRepository);
     }
 
 
@@ -40,7 +44,7 @@ public class OrderServiceTests
             ExtraAmount = 20
         });
 
-        _orderRepository.Received().GetPrizeBy(Arg.Any<List<Product>>());
+        _prizeRepository.Received().GetPrizeBy(Arg.Any<List<Product>>());
     }
 
     [Test]
@@ -68,11 +72,11 @@ public class OrderServiceTests
 
     private void WhenOrder(OrderDto orderDto)
     {
-        _orderService.StoreOrder(orderDto);
+        _ = _orderService.StoreOrder(orderDto);
     }
 
     private void GivenProductPrice(Dictionary<Product, decimal> expected)
     {
-        _orderRepository.GetPrizeBy(Arg.Any<List<Product>>()).Returns(expected);
+        _prizeRepository.GetPrizeBy(Arg.Any<List<Product>>()).Returns(expected);
     }
 }

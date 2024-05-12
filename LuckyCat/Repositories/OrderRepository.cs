@@ -1,7 +1,6 @@
 using System.Text.Json;
 using LuckyCat.DataBase;
 using LuckyCat.DataBase.Entity;
-using LuckyCat.Enums;
 using LuckyCat.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,13 +24,5 @@ public class OrderRepository(LuckyDbContext context) : BaseRepository(context), 
         });
 
         await SaveChangesAsync();
-    }
-
-    public Dictionary<Product, decimal> GetPrizeBy(List<Product> any)
-    {
-        return new Dictionary<Product, decimal>()
-        {
-            {Product.SauceDuckRice, 40m},
-        };
     }
 }
