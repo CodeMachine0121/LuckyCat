@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using LuckyCat.Enums;
+using LuckyCat.Models;
+using LuckyCat.Repositories;
 
 namespace LuckyCat.DataBase.Entity;
 
@@ -12,4 +14,13 @@ public class Price: BaseEntityIntId
     
     [Required]
     public decimal Amount { get; set; }
+
+    public PriceDomain ToDomain()
+    {
+        return new PriceDomain()
+        {
+            Product = Product ,
+            PriceAmount = Amount
+        };
+    }
 }

@@ -1,8 +1,10 @@
 using LuckyCat.Enums;
+using LuckyCat.Models;
+using LuckyCat.Repositories;
 
 namespace LuckyCat.Interface;
 
 public interface IPriceRepository
 {
-    Dictionary<Product, decimal> GetPrizeBy(List<Product> any);
+    List<PriceDomain> GetPrizeBy(List<Product> orderedProduct);
 }

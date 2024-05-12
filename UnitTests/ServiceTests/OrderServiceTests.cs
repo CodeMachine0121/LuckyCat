@@ -28,14 +28,15 @@ public class OrderServiceTests
     [Test]
     public void should_get_price_of_products()
     {
-        GivenProductPrice(new Dictionary<Product, decimal>
+        GivenProductPrice(new PriceDomain
         {
-            { Product.SauceDuckRice, 20 }
+            Product = Product.SauceDuckRice,
+            PriceAmount = 20
         });
 
         WhenOrder(new OrderDto
         {
-            OrderedProducts = new Dictionary<Product, int>
+            OrderedProductsAndAmount = new Dictionary<Product, int>
             {
                 {
                     Product.SauceDuckRice, 1
@@ -50,14 +51,15 @@ public class OrderServiceTests
     [Test]
     public void should_insert_order_with_total_amount()
     {
-        GivenProductPrice(new Dictionary<Product, decimal>
+        GivenProductPrice(new PriceDomain
         {
-            { Product.SauceDuckRice, 20 }
+            Product = Product.SauceDuckRice,
+            PriceAmount = 20
         });
 
         WhenOrder(new OrderDto
         {
-            OrderedProducts = new Dictionary<Product, int>
+            OrderedProductsAndAmount = new Dictionary<Product, int>
             {
                 {
                     Product.SauceDuckRice, 2
@@ -75,8 +77,11 @@ public class OrderServiceTests
         _ = _orderService.StoreOrder(orderDto);
     }
 
-    private void GivenProductPrice(Dictionary<Product, decimal> expected)
+    private void GivenProductPrice( PriceDomain priceDomain)
     {
-        _prizeRepository.GetPrizeBy(Arg.Any<List<Product>>()).Returns(expected);
+        _prizeRepository.GetPrizeBy(Arg.Any<List<Product>>()).Returns(new List<PriceDomain>()
+        {
+            priceDomain,
+        });
     }
 }

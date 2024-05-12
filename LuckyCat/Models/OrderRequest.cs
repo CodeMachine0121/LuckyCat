@@ -18,7 +18,7 @@ public class OrderRequest
 
         return new OrderDto
         {
-            OrderedProducts = orderedProducts,
+            OrderedProductsAndAmount = orderedProducts,
             ExtraAmount = ExtraAmount
         };
     }
