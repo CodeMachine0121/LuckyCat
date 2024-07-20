@@ -1,4 +1,3 @@
-using System.Text.Json.Serialization;
 using LuckyCat.Enums;
 using Newtonsoft.Json;
 
@@ -7,28 +6,38 @@ namespace LuckyCat.Models;
 public class OrderRequest
 {
     [JsonProperty("orderedProduct")]
-    public List<OrderedProductRequest> OrderedProductRequest { get; set; }
-    
+    public List<OrderedProductRequest> OrderedProducts { get; set; }
+
     [JsonProperty("extraAmount")]
     public decimal ExtraAmount { get; set; }
 
     public OrderDto ToDto()
     {
-        var orderedProducts = OrderedProductRequest.ToDictionary(productRequest => (Product)productRequest.ProductId, productRequest => productRequest.Amount);
-
         return new OrderDto
         {
-            OrderedProductsAndAmount = orderedProducts,
+            OrderedProductsAndAmount = GetVolumeMapping(),
             ExtraAmount = ExtraAmount
         };
+    }
+
+    private Dictionary<Product, int> GetVolumeMapping()
+    {
+        // 餐點與數量 mapping
+        return OrderedProducts.ToDictionary(
+            request => Enum.TryParse<Product>(
+                request.Product, out var product)
+                ? product
+                : Product.Unknown
+            , productRequest => productRequest.Volume
+            );
     }
 }
 
 public class OrderedProductRequest
 {
-    [JsonProperty("product-id")]
-    public int ProductId  { get; set; }
-    
-    [JsonProperty("amount")]
-    public int Amount { get; set; }
+    [JsonProperty("product")]
+    public string Product { get; set; }
+
+    [JsonProperty("volume")]
+    public int Volume { get; set; }
 }

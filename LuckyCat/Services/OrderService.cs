@@ -10,7 +10,7 @@ public class OrderService(IOrderRepository orderRepository, IPriceRepository pri
     public async Task StoreOrder(OrderDto dto)
     {
         var orderedProductItems = dto.OrderedProductsAndAmount.Keys.ToList();
-        var prizeBy = priceRepository.GetPrizeBy(orderedProductItems);
+        var priceDomains = priceRepository.GetPrizeBy(orderedProductItems);
 
         var orderDomain = new OrderDomain()
         {
@@ -20,7 +20,7 @@ public class OrderService(IOrderRepository orderRepository, IPriceRepository pri
 
         orderedProductItems.ForEach(x =>
             orderDomain.TotalAmount +=
-                prizeBy.First(p => p.Product == x).PriceAmount * dto.OrderedProductsAndAmount[x]);
+                priceDomains.First(p => p.Product == x).PriceAmount * dto.OrderedProductsAndAmount[x]);
 
         await orderRepository.SaveOrder(orderDomain);
     }

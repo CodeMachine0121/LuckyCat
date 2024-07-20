@@ -2,5 +2,6 @@ namespace LuckyCat.Enums;
 
 public enum Product
 {
-    SauceDuckRice = 0,
+    Unknown = 0,
+    SauceDuckRice = 1,
 }
