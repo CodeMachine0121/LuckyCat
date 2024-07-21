@@ -14,6 +14,7 @@ public class OrderService(IOrderRepository orderRepository, IPriceRepository pri
 
         var orderDomain = new OrderDomain()
         {
+            RefNo = Guid.NewGuid().ToString(),
             TotalAmount = dto.ExtraAmount,
             OrderedProducts = dto.OrderedProductsAndAmount
         };

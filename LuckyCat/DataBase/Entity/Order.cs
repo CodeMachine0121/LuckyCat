@@ -11,4 +11,6 @@ public class Order: BaseEntityIntId
     
     [Required]
     public string OrderedProduct { get; set; }
+
+    public string RefNo { get; set; }
 }

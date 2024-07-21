@@ -17,6 +17,7 @@ public class OrderRepository(LuckyDbContext context) : BaseRepository(context), 
 
         _repo.Add(new Order
         {
+            RefNo = domain.RefNo,
             CreatedOn = DateTime.Now,
             CreatedBy = "System",
             TotalAmount = domain.TotalAmount,
